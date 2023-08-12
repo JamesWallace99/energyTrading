@@ -1,6 +1,6 @@
-from testClasses import Solar
-from testClasses import energyLoad
-from testClasses import energyStorage
+from config import Solar
+from config import energyLoad
+from config import energyStorage
 
 solar = Solar(name = 'solar1', power = 50, location = 'birmingham', panel_area=100)
 load = energyLoad(maxLoad=50, loadTimeLimit= 0.5)
