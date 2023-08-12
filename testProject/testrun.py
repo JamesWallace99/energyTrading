@@ -2,31 +2,51 @@ from testClasses import Solar
 from testClasses import energyLoad
 from testClasses import energyStorage
 
-solar_one = Solar("sunny_meadows", 50, (500, 700), 500)
-load_one = energyLoad(75, 0)
-storage_one = energyStorage(50, "inactive")
+solar = Solar(name = 'solar1', power = 50, location = 'birmingham', panel_area=100)
+load = energyLoad(maxLoad=50, loadTimeLimit= 0.5)
+bat_one = energyStorage(maxOutput=500, state = 'static', maxCapacity=1000, MaxCRate=2, currentCapacity=500)
 
 for i in range(10):
-    storage_available = storage_one.maxCap - storage_one.currentCharge
-    deficit = solar_one.current_output() - load_one.current_load()
+    storage_available = bat_one.maxCapacity - bat_one.currentCapacity
+    imbalance = solar.current_output() - load.current_load() # what is the difference between supply and demand
+    time_demand = load.current_load_time()
     
-    print("\n Storage asset has an instantanous {}MW of capacity available to discharge".format(storage_one.currentCharge))
-    print("Instantaneous grid excess of {}MW detected, invoking balancing mechanism".format(deficit))
+    print("\n Storage asset has {}MWh of energy available to discharge".format(bat_one.currentCapacity))
+    print("Grid imbalance of {}MW detected, invoking balancing mechanism".format(imbalance))
     
-    if deficit >= 0: # if generation is greater than load charge up the battery
-        if (deficit + storage_one.currentCharge) > storage_available: # if the deficit will cause us to exceed battery capacity
-            print("Require generation curtailment of {}MW".format(deficit - storage_available))
-            storage_one.currentCharge = storage_one.maxCap
-        else: # if there is enough storage to handle the excess
-            storage_one.currentCharge += deficit # charge the battery
+    if imbalance > 0: # generation is greater than demand
+        print('Generation greater than demand, attempting to charge batteries')
+        state = bat_one.check_capability(contract_type='charge', power_required=imbalance, service_time=time_demand)
         
-    elif deficit < 0: # if demand is greater than generation
-        if storage_one.currentCharge > abs(deficit): # check if our available battery capacity is enough to meet deficit
-            storage_one.currentCharge -= abs(deficit) # discharge battery
+        if state[0] is not True:
+            print("No storage available, grid overloaded")
             continue
-        else: #if the current charge within storage is not large enough to serve the deficit
-            deficit += storage_one.currentCharge
-            storage_one.currentCharge = 0
-            print("Blackout on grid caused by {}MW deficit in generation and available storage.".format(deficit))
-            
+        
+        bat_one.state = 'charging' # activate the battery
+        print(state)
+        bat_one.currentCapacity = int(state[3]) # charge the battery up
+        imbalance -= state[2] # update the grid state
+        bat_one.state = 'static'
+        
+        if imbalance != 0:
+            print("{}MW Curtailment required".format(imbalance))
+            continue
+    
+    if imbalance < 0: # demand is greater than generation
+        print('Demand greater than generation, attempting to discharge batteries')
+        state = bat_one.check_capability(contract_type='discharge', power_required=abs(imbalance), service_time=time_demand)
+        
+        if state[0] is not True:
+            print("No storage available, grid in deficit")
+            continue
+        
+        bat_one.state = 'discharging' # activate the battery
+        print(state)
+        bat_one.currentCapacity = int(state[3]) # discharge the battery
+        imbalance += state[2] # update the grid state
+        bat_one.state = 'static'
+        
+        if imbalance != 0:
+            print("{}MW Backup power required".format(imbalance))
 
+        

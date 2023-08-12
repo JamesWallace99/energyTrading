@@ -1,8 +1,9 @@
 from testClasses import energyStorage
 
-storage = energyStorage(50, "static", 100, 2, 10)
+storage = energyStorage(50, "static", 100, 2, 90)
 
 print(storage)
 
 
-print(storage.check_capability_discharge(100, 0.001))
+print(storage.check_capability('charge', 50, 0.5))
+
