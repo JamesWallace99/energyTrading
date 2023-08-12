@@ -48,28 +48,35 @@ class energyStorage():
         self.currentCapacity = currentCapacity if currentCapacity is not None else 0 # MWh
         self.systemTime = maxCapacity / maxOutput
         
-    def check_capability_discharge(self, power_required, service_time):
+    def check_capability(self, contract_type: str, power_required: float, service_time: float):
         
         # service time should be provided in hours
         # call this method to check if the asset is capable of delivering the service market requires
         # return False if storage asset cannot provide service
         # return True, power delivered and currentCapacity at end of service if asset capable of full/partial service
         # should also flag is complete or partial service provided
-
         
-        if self.currentCapacity == 0: # if no charge cannot deliver a discharge service
-            return((False, "No charge in system"))
+        if contract_type == 'charge':
+            if self.currentCapacity == self.maxCapacity:
+                return(False, 'System fully charged already.')
+            
+            available_energy = self.maxCapacity - self.currentCapacity
+            power_available = min(available_energy / service_time, self.maxOutput)
+            
         
-        power_available = min(self.currentCapacity / service_time, self.maxOutput)
-        
+        if contract_type == 'discharge':
+            if self.currentCapacity == 0: # if no charge cannot deliver a discharge service
+                return(False, "No charge in system")
+            
+            power_available = min(self.currentCapacity / service_time, self.maxOutput) # calc max power available from system
+            
         if power_available == power_required:
             return(True, "full", power_available, self.currentCapacity - power_available*service_time)
         
         else:
             return(True, "partial", power_available, self.currentCapacity - power_available*service_time)
         
-    def check_capability_charge(self, power_required: float, service_time: float):
-        pass
+        
                    
     
     
