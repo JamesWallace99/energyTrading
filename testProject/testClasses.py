@@ -27,13 +27,6 @@ class Solar(energyGenerator):
     # account for the angle of incidence of the solar farm and combine with irradiance to calculate current output
     # constrain based on physical properties of the panels
 
-class Wind(energyGenerator):
-    
-    # account for windspeed from historic data set
-    # account for angle of wind turbine
-    
-    pass
-
 
 class energyLoad():
     def __init__(self, maxLoad, loadProvided):
@@ -47,24 +40,43 @@ class energyLoad():
         return(random.randint(0, self.maxLoad))
         
 class energyStorage():
-    def __init__(self, maxCap, state, currentCharge = None):
-        self.maxCap = maxCap # define th  max capacity of the storage device in MW
-        self.state = state
-        self.currentCharge = currentCharge if currentCharge is not None else 0 # define the available capacity of the storage device in MW
+    def __init__(self, maxOutput: float, state: str, maxCapacity: float, MaxCRate: float, currentCapacity: float):
+        self.maxOutput = maxOutput # Max Power output MW
+        self.state = state # Charging, Discharging or Static
+        self.maxCapacity = maxCapacity # MWh
+        self.MaxCRate = MaxCRate # int
+        self.currentCapacity = currentCapacity if currentCapacity is not None else 0 # MWh
+        self.systemTime = maxCapacity / maxOutput
+        
+    def check_capability_discharge(self, power_required, service_time):
+        
+        # service time should be provided in hours
+        # call this method to check if the asset is capable of delivering the service market requires
+        # return False if storage asset cannot provide service
+        # return True, power delivered and currentCapacity at end of service if asset capable of full/partial service
+        # should also flag is complete or partial service provided
 
         
+        if self.currentCapacity == 0: # if no charge cannot deliver a discharge service
+            return((False, "No charge in system"))
         
-class esoBot():
-    # first let botESO build new assets if load is higher than generation
-    pass
-
-# national grid esoBot should make an assumption on power demands based on forecast
-# once in the market national grid esoBot should compare demand and supply and chose to activate storage when needed
-# add asset state, update state to neutral or discharge depending on action currently being performed
-# once serviced then update state
-# then consider bidding strategy from storage bots into the market - their strategies should prefer max profit
-# esoBot should constrain by grid servicing but also try to optimise on price
-
+        power_available = min(self.currentCapacity / service_time, self.maxOutput)
+        
+        if power_available == power_required:
+            return(True, "full", power_available, self.currentCapacity - power_available*service_time)
+        
+        else:
+            return(True, "partial", power_available, self.currentCapacity - power_available*service_time)
+        
+    def check_capability_charge(self, power_required: float, service_time: float):
+        pass
+                   
     
+    
+        
+        
+
+      
+        
 
 
