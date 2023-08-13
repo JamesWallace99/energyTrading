@@ -29,7 +29,8 @@ class Solar(energyGenerator):
 
 class energyLoad():
     # simulate energy load
-    def __init__(self, maxLoad, loadTimeLimit):
+    def __init__(self, name, maxLoad, loadTimeLimit):
+        self.name = name # name of load asset
         self.maxLoad = maxLoad # max load
         self.loadTimeLimit = loadTimeLimit # limit in hrs of time demanded to deliver load
     

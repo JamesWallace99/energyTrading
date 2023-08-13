@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 solar = Solar(name = 'solar1', power = 250, location = 'birmingham', panel_area=100)
-load = energyLoad(maxLoad=250, loadTimeLimit= 0.5)
+load = energyLoad(name = "load1", maxLoad=250, loadTimeLimit= 0.5)
 bat_one = energyStorage(name = 'bat1', maxOutput=500, state = 'static', maxCapacity=1000, MaxCRate=2, currentCapacity=500)
 
 battery_power = np.array([])
