@@ -9,22 +9,17 @@ class esoBot():
         self.sim_runs = sim_runs
         self.mode = mode
     
-    def generate_storage_random(self, num_assets: int, output_range: list, max_capacity_range:list, current_range: list):
-        # generate the storage on the grid
-        
-        test = energyStorage(name = 'test', maxOutput=50, state = 'static', maxCapacity=100, MaxCRate=2, currentCapacity=0)
-        
+    def generate_storage_random(self, num_storage_assets: int, output_range: list, max_capacity_range:list, current_range: list):
         storage_assets = []
-        
-        for i in range(num_assets):
+        for i in range(num_storage_assets):
             storage_assets.append(energyStorage(name = "storage" + str(i), maxOutput=random.randint(output_range[0], output_range[1]), state = 'static', maxCapacity=random.randint(max_capacity_range[0], max_capacity_range[1]), MaxCRate=1, currentCapacity=random.randint(current_range[0], current_range[1])))
             
         return(storage_assets)
-        
     
-    def generate_load_random():
-        # start the load on the grid
-        pass
+    def generate_load_random(self, num_load_assets: int, max_load_range: list, load_time_limit_range: list):
+        load_assets = []
+        for i in range(num_load_assets):
+            load_assets.append(energyLoad(name = "load" + str(i), maxLoad=random.randint(max_load_range[0], max_load_range[1]), loadTimeLimit=random.randint(load_time_limit_range[0], load_time_limit_range[1])))
     
     def generate_generators_random():
         # start the generators on the grid
