@@ -11,7 +11,7 @@ class energyGenerator():
 
 class Solar(energyGenerator):
     # subclass for solar generator
-    def __init__(self, name, power, location, panel_area):
+    def __init__(self, name, power, location = None, panel_area = None):
         super().__init__(name, power, location)
         self.panel_area = panel_area # panel area
         
@@ -47,7 +47,8 @@ class energyLoad():
     
         
 class energyStorage():
-    def __init__(self, maxOutput: float, state: str, maxCapacity: float, MaxCRate: float, currentCapacity: float):
+    def __init__(self, name: str, maxOutput: float, state: str, maxCapacity: float, MaxCRate: float, currentCapacity: float):
+        self.name = name # asset name
         self.maxOutput = maxOutput # Max Power output MW
         self.state = state # Charging, Discharging or Static
         self.maxCapacity = maxCapacity # MWh
