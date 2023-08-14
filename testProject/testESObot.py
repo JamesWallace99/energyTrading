@@ -1,4 +1,4 @@
-from config import energyStorage, energyLoad, energyGenerator
+from config import energyStorage, energyLoad, Solar
 import random
 
 # randomly generates assets given parameter range
@@ -21,8 +21,10 @@ class esoBot():
         for i in range(num_load_assets):
             load_assets.append(energyLoad(name = "load" + str(i), maxLoad=random.randint(max_load_range[0], max_load_range[1]), loadTimeLimit=random.randint(load_time_limit_range[0], load_time_limit_range[1])))
     
-    def generate_generators_random():
-        # start the generators on the grid
+    def generate_generators_random(self, num_generator_assets: int, power_range: list):
+        generator_assets = []
+        for i in range(num_generator_assets):
+            generator_assets.append(Solar(name = "generator" + str(i), power = random.randint(power_range[0], power_range[-1])))
         pass 
     
     def initiate_grid():
