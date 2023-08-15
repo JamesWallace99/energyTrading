@@ -1,7 +1,7 @@
 import random
 
 class energyGenerator():
-    def __init__(self, name, power, location):
+    def __init__(self, name, power, location= None):
         self.name = name
         self.power = power
         self.location = location # tuple of long-lat need to define data format
