@@ -30,9 +30,12 @@ class esoBot():
         return(self.generator_assets)
     
     def initiate_grid():
+        # write this next, should account for mode and include/generate random params in random mode
+        # should create all the assets
         pass 
     
     def run_grid():
+        # auto balance between all available assets
         pass
     
     
