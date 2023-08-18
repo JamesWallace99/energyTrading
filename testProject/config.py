@@ -24,6 +24,9 @@ class Solar(energyGenerator):
         
         return(random.randint(0, self.power))
     
+    def __str__(self):
+        return f"Name: {self.name}, Current Output: {self.current_output()} MW, Max Output: {self.power} MW"
+    
     # account for the angle of incidence of the solar farm and combine with irradiance to calculate current output
     # constrain based on physical properties of the panels
 
@@ -33,6 +36,9 @@ class energyLoad():
         self.name = name # name of load asset
         self.maxLoad = maxLoad # max load
         self.loadTimeLimit = loadTimeLimit # limit in hrs of time demanded to deliver load
+        
+    def __str__(self):
+        return f"Name: {self.name}, Max Load: {self.maxLoad} MW, Load Time Limit: {self.loadTimeLimit} hrs, Current Load: {self.current_load()} MW, Current Load Time: {self.current_load_time()} hrs"
     
     def current_load(self):
         """
@@ -56,6 +62,9 @@ class energyStorage():
         self.MaxCRate = MaxCRate # int
         self.currentCapacity = currentCapacity if currentCapacity is not None else 0 # MWh
         self.systemTime = maxCapacity / maxOutput
+        
+    def __str__(self):
+        return f"Name: {self.name}, Max Output: {self.maxOutput} MW, Max Capacity: {self.maxCapacity} MWh, Current Capacity: {self.currentCapacity}"
         
     def check_capability(self, contract_type: str, power_required: float, service_time: float):
         
