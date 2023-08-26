@@ -1,0 +1,4 @@
+name,type,num_assets,power_range,output_range,max_capacity_range,current_range,max_load_range,load_time_limit_range
+,load,11,,,,,"10,100","0.1,1"
+,storage,8,,"50,100","100,200","0, 200",,
+,generator,5,"50,100",,,,,
