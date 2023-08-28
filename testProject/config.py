@@ -22,7 +22,7 @@ class Solar(energyGenerator):
         # use time and location and compare to irradiance dataset to calculate irradiance
         # convert irradiance to solar farm output using heat-rate / efficiency
         
-        return(random.randint(0, self.power))
+        return(round(random.uniform(0, self.power), 2))
     
     def __str__(self):
         return f"Name: {self.name}, Current Output: {self.current_output()} MW, Max Output: {self.power} MW"
@@ -44,7 +44,7 @@ class energyLoad():
         """
         Return the current load demanded by the grid
         """
-        return(random.randint(0, self.maxLoad))
+        return(random.uniform(0, self.maxLoad))
     
     def current_load_time(self):
         '''
