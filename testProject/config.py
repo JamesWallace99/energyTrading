@@ -1,10 +1,29 @@
 import random
 
 class energyGenerator():
+    """
+    A class to represent a generator asset on the grid.
+    
+    ...
+    
+    Attributes
+    ----------
+    name : str
+        Name of the generator asset
+    power : float
+        Max power output of the generator asset (MW)
+    location : List[float]
+        List containing lat and long of generator asset
+        
+    Methods
+    -------
+    None
+
+    """
     def __init__(self, name, power, location= None):
-        self.name = name
-        self.power = power
-        self.location = location # tuple of long-lat need to define data format
+        self.name : str = name
+        self.power : float = power
+        self.location : list = location # list of long-lat need to define data format
         
     def __str__(self):
         return f"Site Name: {self.name}, Power Output: {self.power}"
