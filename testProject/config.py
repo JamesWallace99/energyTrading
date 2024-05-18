@@ -193,26 +193,21 @@ class energyStorage():
                         
         """
         
-        # service time should be provided in hours
-        # call this method to check if the asset is capable of delivering the service market requires
-        # return False if storage asset cannot provide service
-        # return True, power delivered and currentCapacity at end of service if asset capable of full/partial service
-        # should also flag is complete or partial service provided
-        
         # first check if asset can charge and discharge i.e. is it at max or min current capacity
         # check if max power is greater than demand - if so reduce and calcualte energy that can be provided
         # if asset can charge/discharge, max power isn't greater than demand, and has current cap greater than service_time*max_output it should operate at max power
         # if there isn't enough energy available it should bid in with a reduced power output
         
         if contract_type == 'charge':
+            # first check if storage is at max capacity
             if self.currentCapacity == self.maxCapacity: # if no available capacity system cannot charge
                 return(False, 'System fully charged already.')
+            
+            # now check to see if the demanded power from grid is less than asset max
             
             available_storage = self.maxCapacity - self.currentCapacity
             power_available = min(available_storage / service_time, self.maxOutput) # this looks wrong
             
-            #print(available_storage)
-            #print(power_available)
             
             if power_available >= power_required:
                 return(True, "full", power_required, self.currentCapacity + power_available*service_time)
@@ -221,6 +216,7 @@ class energyStorage():
                 return(True, "partial", power_available, self.currentCapacity + power_available*service_time)
             
         if contract_type == 'discharge':
+            # first, check if storage is at min capacity
             if self.currentCapacity == 0: # if no charge cannot deliver a discharge service
                 return(False, "No charge in system")
             
