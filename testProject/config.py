@@ -64,7 +64,7 @@ class Solar(energyGenerator):
                         None
 
                 Returns:
-                        float, randomised value based on max output
+                        float, uniform randomised value based on max output
     
         """
         # use time and location and compare to irradiance dataset to calculate irradiance
@@ -79,25 +79,64 @@ class Solar(energyGenerator):
     # constrain based on physical properties of the panels
 
 class energyLoad():
-    # simulate energy load
-    def __init__(self, name, maxLoad, loadTimeLimit):
+    """
+    A class to represent load assets on the grid.
+    
+    ...
+    
+    Attributes
+    ----------
+    name : str
+        Name of the load asset
+    maxLoad : float
+        Max power demanded by the load asset (MW)
+    loadTimeLimit : float
+        Max Time in hrs that load power is demanded for
+    location : List[float]
+        List containing lat and long of load asset
+        
+    Methods
+    -------
+    current_load() -> float:
+        Returns current load power demand in MW
+        
+    current_load_time() -> float:
+        Returns time that current load is demanded for in hrs
+
+    """
+    def __init__(self, name, maxLoad, loadTimeLimit, location = None):
         self.name = name # name of load asset
-        self.maxLoad = maxLoad # max load
+        self.maxLoad = maxLoad # max load in MW
         self.loadTimeLimit = loadTimeLimit # limit in hrs of time demanded to deliver load
+        self.location : list[float] = location # list of long-lat need to define data format
         
     def __str__(self):
         return f"Name: {self.name}, Max Load: {self.maxLoad} MW, Load Time Limit: {self.loadTimeLimit} hrs, Current Load: {self.current_load()} MW, Current Load Time: {self.current_load_time()} hrs"
     
     def current_load(self):
         """
-        Return the current load demanded by the grid
+        Returns current load power demand in MW
+
+                Parameters:
+                        None
+
+                Returns:
+                        float, uniform randomised value based on max load
+    
         """
         return(random.uniform(0, self.maxLoad))
     
     def current_load_time(self):
-        '''
-        Return time that load is expected to remain on the grid
-        '''
+        """
+        Returns time that current load is demanded for in hrs
+
+                Parameters:
+                        None
+
+                Returns:
+                        float, uniform randomised value based on max load time limit
+    
+        """
         return(random.uniform(0, self.loadTimeLimit))
     
         
