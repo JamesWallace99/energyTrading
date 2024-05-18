@@ -105,9 +105,9 @@ class energyLoad():
 
     """
     def __init__(self, name, maxLoad, loadTimeLimit, location = None):
-        self.name = name # name of load asset
-        self.maxLoad = maxLoad # max load in MW
-        self.loadTimeLimit = loadTimeLimit # limit in hrs of time demanded to deliver load
+        self.name : str = name # name of load asset
+        self.maxLoad : float = maxLoad # max load in MW
+        self.loadTimeLimit : float = loadTimeLimit # limit in hrs of time demanded to deliver load
         self.location : list[float] = location # list of long-lat need to define data format
         
     def __str__(self):
@@ -141,19 +141,57 @@ class energyLoad():
     
         
 class energyStorage():
-    def __init__(self, name: str, maxOutput: float, state: str, maxCapacity: float, MaxCRate: float, currentCapacity: float):
-        self.name = name # asset name
-        self.maxOutput = maxOutput # Max Power output MW
-        self.state = state # Charging, Discharging or Static
-        self.maxCapacity = maxCapacity # MWh
-        self.MaxCRate = MaxCRate # int
-        self.currentCapacity = currentCapacity if currentCapacity is not None else 0 # MWh
-        self.systemTime = maxCapacity / maxOutput
+    """
+    A class to represent storage assets on the grid.
+    
+    ...
+    
+    Attributes
+    ----------
+    name : str
+        Name of the storage asset
+    maxOutput : float
+        Max power output (MW)
+    state : str
+        state of asset - 'Charging', 'Discharging' or 'Static'
+    maxCapacity : float
+        defines the max energy of the asset MWh
+    currentCapacity: float
+        the current energy stored in the asset MWh
+        
+    Methods
+    -------
+    check_capability() -> float:
+        Returns current load power demand in MW
+
+    """
+    def __init__(self, name: str, maxOutput: float, state: str, maxCapacity: float, currentCapacity: float):
+        self.name : str = name # asset name
+        self.maxOutput : float = maxOutput # Max Power output MW
+        self.state : str = state # Charging, Discharging or Static
+        self.maxCapacity : float = maxCapacity # MWh
+        self.currentCapacity : float = currentCapacity if currentCapacity is not None else 0 # MWh
         
     def __str__(self):
         return f"Name: {self.name}, Max Output: {self.maxOutput} MW, Max Capacity: {self.maxCapacity} MWh, Current Capacity: {self.currentCapacity}"
         
     def check_capability(self, contract_type: str, power_required: float, service_time: float):
+        """
+        Checks if, and to what extent, the storage asset can provide a demanded service
+        Assumes that asset is always able to meet max power output
+
+                Parameters:
+                        contract_type: str - Charge or Discharge
+                        power_required: float - power needed to be provided to fulfill service MW
+                        service_time: float - time that service is required for hrs
+
+                Returns:
+                        True / False if asset is able/not able to provide at least a partial service
+                        Power delivered - this needs to change to energy
+                        currentCapacity at end of service - currently only reported if asset provides service, change
+                        
+                        
+        """
         
         # service time should be provided in hours
         # call this method to check if the asset is capable of delivering the service market requires
@@ -161,12 +199,17 @@ class energyStorage():
         # return True, power delivered and currentCapacity at end of service if asset capable of full/partial service
         # should also flag is complete or partial service provided
         
+        # first check if asset can charge and discharge i.e. is it at max or min current capacity
+        # check if max power is greater than demand - if so reduce and calcualte energy that can be provided
+        # if asset can charge/discharge, max power isn't greater than demand, and has current cap greater than service_time*max_output it should operate at max power
+        # if there isn't enough energy available it should bid in with a reduced power output
+        
         if contract_type == 'charge':
             if self.currentCapacity == self.maxCapacity: # if no available capacity system cannot charge
                 return(False, 'System fully charged already.')
             
             available_storage = self.maxCapacity - self.currentCapacity
-            power_available = min(available_storage / service_time, self.maxOutput)
+            power_available = min(available_storage / service_time, self.maxOutput) # this looks wrong
             
             #print(available_storage)
             #print(power_available)

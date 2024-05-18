@@ -13,7 +13,7 @@ class esoBot():
         # if mode isn't random need to allow users to pass a custom list of generator, load and storage assets
     
     def generate_storage(self, name: str, output: float, max_capacity: float, current_capacity: float):
-        self.storage_assets.append(energyStorage(name = name, maxOutput=output, state = 'static', maxCapacity= max_capacity, MaxCRate=1, currentCapacity= current_capacity))
+        self.storage_assets.append(energyStorage(name = name, maxOutput=output, state = 'static', maxCapacity= max_capacity, currentCapacity= current_capacity))
         return()
     
     def generate_load(self, name: str, max_load: float, load_time_limit: float):
