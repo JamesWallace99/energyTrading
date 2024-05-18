@@ -23,20 +23,49 @@ class energyGenerator():
     def __init__(self, name, power, location= None):
         self.name : str = name
         self.power : float = power
-        self.location : list = location # list of long-lat need to define data format
+        self.location : list[float] = location # list of long-lat need to define data format
         
     def __str__(self):
         return f"Site Name: {self.name}, Power Output: {self.power}"
 
 class Solar(energyGenerator):
-    # subclass for solar generator
+    """
+    A class to represent a solar generator asset on the grid.
+    
+    ...
+    
+    Attributes
+    ----------
+    name : str
+        Name of the generator asset
+    power : float
+        Max power output of the generator asset (MW)
+    location : List[float]
+        List containing lat and long of generator asset
+    panel_area : float
+        Panel surface area used for power output calculation
+        
+    Methods
+    -------
+    current_output() -> float:
+        Returns current output in MW
+
+    """
+    
     def __init__(self, name, power, location = None, panel_area = None):
         super().__init__(name, power, location)
-        self.panel_area = panel_area # panel area
+        self.panel_area : float = panel_area # panel area
         
-    def current_output(self):
+    def current_output(self) -> float:
         """
-        Return the current output of the solar asset
+        Returns current output in MW
+
+                Parameters:
+                        None
+
+                Returns:
+                        float, randomised value based on max output
+    
         """
         # use time and location and compare to irradiance dataset to calculate irradiance
         # convert irradiance to solar farm output using heat-rate / efficiency
