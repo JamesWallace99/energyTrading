@@ -228,90 +228,19 @@ class energyStorage():
                 energy_available += -1* temp_power_limit*time_step
                 return([True, temp_power_limit, energy_available])
 
-    def execute_trade(self, grid_power_req):
+    def execute_trade(self, grid_power_req, time_step):
         '''
         Executes on a market trade and updates assets currentCapacity
         Input: float power required by market.
-               Positive if power needs to be added
-               Negative if power needs to be removed
+                    Positive if power needs to be added
+                    Negative if power needs to be removed
+                time_step
         Output: boolean, true if trade succesful, false if trade not succesful
         '''
-        temp = self.report_capabiltiy(grid_power_req)
+        temp = self.report_capabiltiy(grid_power_req, time_step)
         if temp[0]:
             self.currentCapacity += temp[2]
             return(True)
         else:
             return(False)
 
-            
-        
-# test cases
-"""
-x = energyGenerator(name = "test", max_power = 45, time_step = 0.25, sim_length= 14)
-print(x.calculate_generation())
-
-y = energyGenerator(name = "test_2", max_power = 9000, time_step = 0.6, sim_length= 9)
-print(y.calculate_generation())
-
-z = energyLoad(name = "test", maxLoad= 50, time_step= 0.3, sim_length= 40)
-print(z.calculate_load())
-
-# test fully charged asset discharging
-# should work
-print("Fully charged discharging")
-a = energyStorage(name = "test", maxOutput= 50, maxCapacity= 100, currentCapacity= 100)
-x = np.linspace(0.1, 1, 10)
-
-
-for i in x:
-    print("Power Required:", 10)
-    print("Time step (hrs):", i)
-    print("Energy required:", i * 10)
-    print(a.report_capabiltiy(10, i))
-    
-# test fully discharged asset discharging
-# should fail
-print("Fully discharged discharging")
-b = energyStorage(name = "test", maxOutput= 50, maxCapacity= 100, currentCapacity= 0)
-x = np.linspace(0.1, 1, 10)
-
-
-for i in x:
-    print("Power Required:", 10)
-    print("Time step (hrs):", i)
-    print("Energy required:", i * 10)
-    print(b.report_capabiltiy(10, i))
-    
-# test fully charged asset charging
-# should fail
-print("Fully charged charging")
-c = energyStorage(name = "test", maxOutput= 50, maxCapacity= 100, currentCapacity= 100)
-x = np.linspace(0.1, 1, 10)
-
-
-for i in x:
-    print("Power Required:", -10)
-    print("Time step (hrs):", i)
-    print("Energy required:", i * -10)
-    print(c.report_capabiltiy(-10, i))
-
-
-
-# test fully discharged asset charging
-# should pass
-print("Fully discharged charging")
-d = energyStorage(name = "test", maxOutput= 50, maxCapacity= 100, currentCapacity= 0)
-x = np.linspace(0.1, 1, 10) # timesteps 
-
-
-for i in x:
-    print("Power Required:", -10)
-    print("Time step (hrs):", i)
-    print("Energy required:", i * -10)
-    print(d.report_capabiltiy(-10, i))
-
-"""
-
-
-# need to move timestep into input for report capability
-# need to move timestep into input for execute_trade
