@@ -124,8 +124,12 @@ class energyStorage():
         
     Methods
     -------
-    check_capability() -> float:
-        Returns current load power demand in MW
+    report_capability() -> float:
+        Returns asset's abiltiy to conduct trade and state of asset after trade.
+        Input: grid power requirement
+               Positive when power needs to be added to the grid
+               Negative when power needs to be removed from the grid
+        Output: List[can conduct trade: boolean, power provided to grid: float, updated asset capacity: float]
 
     """
     def __init__(self, name, maxOutput, maxCapacity, time_step, currentCapacity):
@@ -141,6 +145,14 @@ class energyStorage():
     
     def report_capabiltiy(self, grid_power_req):
         
+        '''
+        Returns asset's abiltiy to conduct trade and state of asset after trade.
+        Input: grid power requirement
+               Positive when power needs to be added to the grid
+               Negative when power needs to be removed from the grid
+        Output: List[can conduct trade: boolean, power provided to grid: float, updated asset capacity: float]
+        '''
+        
         # need to change report capabiltiy such that it doesn't update system state
         # need to add a separate function that executes trade
         
@@ -152,6 +164,7 @@ class energyStorage():
         # if asset can charge/discharge, max power isn't greater than demand, and has current cap greater than service_time*max_output it should operate at max power
         # if there isn't enough energy available it should bid in with a reduced power output
         # output format [can_serve [bool], power_provided to grid, new capacity]
+        # eventually needs to calculate a price at which the asset will bid into power market
         
         
         # set an internal state that matches current capacity as we are checking capabiltiy
@@ -199,6 +212,20 @@ class energyStorage():
                 storage_capacity += temp_power_limit*self.time_step
                 return([True, -1*temp_power_limit, storage_capacity])
 
+    def execute_trade(self, grid_power_req):
+        '''
+        Executes on a market trade and updates assets currentCapacity
+        Input: float power required by market.
+               Positive if power needs to be added
+               Negative if power needs to be removed
+        Output: boolean, true if trade succesful, false if trade not succesful
+        '''
+        temp = self.report_capabiltiy(grid_power_req)
+        if temp[0]:
+            self.currentCapacity += temp[2]
+            return(True)
+        else:
+            return(False)
 
             
         
