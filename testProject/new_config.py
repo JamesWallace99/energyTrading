@@ -141,6 +141,9 @@ class energyStorage():
     
     def report_capabiltiy(self, grid_power_req):
         
+        # need to change report capabiltiy such that it doesn't update system state
+        # need to add a separate function that executes trade
+        
         # grid power req is positive when power needs to be added to grid
         # grid power req is negative wen power needs to be absorbed by the grid
         
@@ -151,21 +154,26 @@ class energyStorage():
         # output format [can_serve [bool], power_provided to grid, new capacity]
         
         
-        # cover edge cases, asset unable to charge/discharge
-        if grid_power_req < 0 and self.currentCapacity == self.maxCapacity:
-            return([False, 0, self.currentCapacity])
+        # set an internal state that matches current capacity as we are checking capabiltiy
         
-        if grid_power_req > 0 and self.currentCapacity == 0:
-            return([False, 0, self.currentCapacity])
+        storage_capacity = self.currentCapacity
+        
+        
+        # cover edge cases, asset unable to charge/discharge
+        if grid_power_req < 0 and storage_capacity == self.maxCapacity:
+            return([False, 0, storage_capacity])
+        
+        if grid_power_req > 0 and storage_capacity == 0:
+            return([False, 0, storage_capacity])
         
         
         # now consider cases where asset is able to particpate
         
         # need to ensure asset is bidding in with enough energy to supply quoted power
         # if there isn't enough energy available to supply max output for time period need to find new power limit
-        if self.maxOutput * self.time_step > self.currentCapacity:
+        if self.maxOutput * self.time_step > storage_capacity:
             # can't sustain max power for the time period so need to bid in with new power limit
-            temp_power_limit = self.currentCapacity / self.time_step
+            temp_power_limit = storage_capacity / self.time_step
         else:
             temp_power_limit = self.maxOutput
         
@@ -174,22 +182,22 @@ class energyStorage():
         if abs(grid_power_req) < temp_power_limit:
             # we reduce power output of asset to match exact grid requirement
             if grid_power_req > 0: # if asset needs to discharge
-                self.currentCapacity -= grid_power_req*self.time_step
-                return([True, grid_power_req, self.currentCapacity])
+                storage_capacity -= grid_power_req*self.time_step
+                return([True, grid_power_req, storage_capacity])
             if grid_power_req < 0: # asset needs to charge from grid
-                self.currentCapacity += grid_power_req*self.time_step
-                return([True, -1*grid_power_req, self.currentCapacity])
+                storage_capacity += grid_power_req*self.time_step
+                return([True, -1*grid_power_req, storage_capacity])
             
 
         
         # in case where more power needs to provided to grid than asset can provide
         if abs(grid_power_req) > temp_power_limit:
             if grid_power_req > 0: # if asset needs to discharge
-                self.currentCapacity -= temp_power_limit*self.time_step
-                return([True, temp_power_limit, self.currentCapacity])
+                storage_capacity -= temp_power_limit*self.time_step
+                return([True, temp_power_limit, storage_capacity])
             if grid_power_req < 0: # asset needs to charge from grid
-                self.currentCapacity += temp_power_limit*self.time_step
-                return([True, -1*temp_power_limit, self.currentCapacity])
+                storage_capacity += temp_power_limit*self.time_step
+                return([True, -1*temp_power_limit, storage_capacity])
 
 
             
