@@ -1,4 +1,4 @@
-from new_config import energyStorage, energyLoad, energyGenerator
+from config import energyStorage, energyLoad, energyGenerator
 import random
 import pandas as pd
 import numpy as np

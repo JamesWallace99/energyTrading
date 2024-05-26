@@ -1,6 +1,6 @@
-from new_config import energyGenerator
-from new_config import energyLoad
-from new_config import energyStorage
+from config import energyGenerator
+from config import energyLoad
+from config import energyStorage
 
 import numpy as np
 

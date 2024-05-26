@@ -1,7 +1,7 @@
-import newESObot
-import new_config
+import ESObot
+import config
 
-x = newESObot.esoBot()
+x = ESObot.esoBot()
 
 csv_filepath = "test_random_input.csv"
 
