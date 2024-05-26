@@ -2,6 +2,7 @@ from new_config import energyStorage, energyLoad, energyGenerator
 import random
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class esoBot():
@@ -10,6 +11,7 @@ class esoBot():
         self.storage_assets = []
         self.load_assets = []
         self.generator_assets = []
+        self.imbalance_profile = []
         # if mode isn't random need to allow users to pass a custom list of generator, load and storage assets
     
     # these methods add the generation, load and storage assets into the bot instance
@@ -64,8 +66,30 @@ class esoBot():
             net_load += self.load_assets[i].calculate_load(sim_length, time_step)
         
         net_imbalance = net_gen - net_load
+        
+        self.imbalance_profile = net_imbalance
             
         return(net_imbalance)
+    
+    def plot_imbalance(self, sim_length, time_step):
+        
+        times = np.linspace(0, sim_length, num = int(np.ceil((sim_length / time_step))))
+        
+        if len(self.imbalance_profile) > 0:
+            plt.bar(times, self.imbalance_profile)
+            plt.xlabel("Time Step (Hrs)")
+            plt.ylabel("Net Imbalance (MW)")
+            plt.show()
+            return()
+        
+        else:
+            imbalance = self.get_imbalance_forecast(sim_length, time_step)
+            plt.bar(times, imbalance)
+            plt.xlabel("Time Step (Hrs)")
+            plt.ylabel("Net Imbalance (MW)")
+            plt.show()
+            return()
+        
         
         
         

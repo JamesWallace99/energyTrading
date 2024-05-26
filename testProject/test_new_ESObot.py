@@ -9,6 +9,7 @@ csv_filepath = "test_random_input.csv"
 x.initiate_grid_csv(csv_filepath)
 
 # calculate the imbalance from forecasts
-print(x.get_imbalance_forecast(sim_length = 10, time_step= 1))
+# print(x.imbalance_profile)
+# x.get_imbalance_forecast(sim_length = 10, time_step= 1)
 
-
+x.plot_imbalance(sim_length=10, time_step= 1)
