@@ -3,3 +3,4 @@ rand_load_bedford,Bedford,load,,,,,100
 rand_stor_bedford,Bedford,storage,,100,200,200,
 rand_gen_bedford,Bedford,generator,100,,,,
 rand_gen_oxford,Oxford,generator,100,,,,
+rand_stor_oxford,Oxford,storage,,100,100,0,

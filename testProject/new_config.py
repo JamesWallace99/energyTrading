@@ -160,12 +160,9 @@ class energyStorage():
         # set an internal state that matches current capacity as we are checking capabiltiy
         
         energy_available = self.currentCapacity
-    
-
-        
         
         # cover edge cases, asset unable to charge/discharge
-        if grid_power_req < 0 and energy_available == self.maxCapacity:
+        if grid_power_req < 0 and round(energy_available) == round(self.maxCapacity):
             return([False, 0, energy_available]) # grid wants asset to charge but is at full cap
         
         if grid_power_req > 0 and energy_available == 0:
@@ -185,20 +182,23 @@ class energyStorage():
         # (max capacity - storage capacity) is the energy to fill
         # need to compare this to the 
         
-        if grid_power_req > 0: # asset discharging
+        if grid_power_req > 0: # asset discharging as grid requires some power
             if self.maxOutput * time_step > energy_available:
                 # can't sustain max power for the time period so need to bid in with new power limit
                 temp_power_limit = energy_available / time_step
             else:
                 temp_power_limit = self.maxOutput
-        if grid_power_req < 0: # asset charging
+        if grid_power_req < 0: # asset charging as grid requires power to be absorbed
             energy_to_fill = self.maxCapacity - energy_available
+            print("energy available to fill: ", energy_to_fill)
             if self.maxOutput * time_step > energy_to_fill:
                 # can't sustain max power for the time period so need to bid in with new power limit
                 temp_power_limit = -1* energy_to_fill / time_step
             else:
                 temp_power_limit = -1* self.maxOutput
         
+        if grid_power_req == 0:
+            temp_power_limit = self.maxOutput
         
         # edge case
         # if the grid needs less power than the asset can provide, we need to supply less power
@@ -233,7 +233,7 @@ class energyStorage():
         '''
         temp = self.report_capabiltiy(grid_power_req, time_step)
         if temp[0]:
-            self.currentCapacity += temp[2]
+            self.currentCapacity -= temp[1]*time_step
             return(True)
         else:
             return(False)

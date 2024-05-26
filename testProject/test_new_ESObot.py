@@ -6,10 +6,12 @@ x = newESObot.esoBot()
 csv_filepath = "test_random_input.csv"
 
 # load assets into eso register
-x.initiate_grid_csv(csv_filepath)
+# x.initiate_grid_csv(csv_filepath)
 
 # calculate the imbalance from forecasts
 # print(x.imbalance_profile)
 # x.get_imbalance_forecast(sim_length = 10, time_step= 1)
 
+
+x.balance_grid(sim_length=10, time_step=1, asset_csv_pathname= csv_filepath)
 x.plot_imbalance(sim_length=10, time_step= 1)
