@@ -29,7 +29,7 @@ class energyGenerator():
     Assume that value is average power gen in MW within interval
 
     """
-    def __init__(self, name, max_power, time_step, sim_length, location= None, gen_forecast = None):
+    def __init__(self, name, max_power, time_step = None, sim_length = None, location= None, gen_forecast = None):
         self.name : str = name
         self.max_power : float = max_power
         self.location : list[float] = location # list of long-lat need to define data format
@@ -80,7 +80,7 @@ class energyLoad():
     Assume that value is average demand gen in MW within interval
 
     """
-    def __init__(self, name, maxLoad, time_step, sim_length, load_forecast = None, location = None):
+    def __init__(self, name, maxLoad, time_step = None, sim_length = None, load_forecast = None, location = None):
         self.name : str = name # name of load asset
         self.maxLoad : float = maxLoad # max load in MW
         self.location : list[float] = location # list of long-lat need to define data format
