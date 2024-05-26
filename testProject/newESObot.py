@@ -1,6 +1,7 @@
 from new_config import energyStorage, energyLoad, energyGenerator
 import random
 import pandas as pd
+import numpy as np
 
 
 class esoBot():
@@ -31,22 +32,44 @@ class esoBot():
         # get generator assets
         mask = df["type"] == "generator"
         gen_df = df[mask]
+        y = 0
         for index, row in gen_df.iterrows():
-                self.generator_assets.append(self.generate_generator(name = row["name"], power = row["gen_power_lim"]))
+            self.generate_generator(name = row["name"], power = row["gen_power_lim"])
         
         # get load assets
         mask = df["type"] == "load"
         load_df = df[mask]
         for index, row in load_df.iterrows():
-                self.load_assets.append(self.generate_load(name = row["name"], max_load = row["load_power_lim"]))
+            self.generate_load(name = row["name"], max_load = row["load_power_lim"])
         
         # get storage assets
         mask = df["type"] == "storage"
         stor_df = df[mask]
         for index, row in stor_df.iterrows():
-                self.storage_assets.append(self.generate_storage(name = row["name"], output = row["storage_power_lim"], max_capacity= row["storage_max_cap"], current_capacity= row["storage_current_cap"]))
+            self.generate_storage(name = row["name"], output = row["storage_power_lim"], max_capacity= row["storage_max_cap"], current_capacity= row["storage_current_cap"])
         
         return(print("Assets initialised succesfully"))
+    
+    def get_imbalance_forecast(self, sim_length, time_step):
+        
+        net_gen = np.zeros(int(np.ceil((sim_length / time_step)))) # stores gen profile over time period
+        net_load = np.zeros(int(np.ceil((sim_length / time_step)))) # stores demand profile over time period
+        
+        # iterate over gen and get profile
+        
+        for i in range(len(self.generator_assets)):
+            net_gen += self.generator_assets[i].calculate_generation(sim_length, time_step)
+            
+        for i in range(len(self.load_assets)):
+            net_load += self.load_assets[i].calculate_load(sim_length, time_step)
+        
+        net_imbalance = net_gen - net_load
+            
+        return(net_imbalance)
+        
+        
+        
+        # net_imbalance = net_gen - net_load
     
                 
     

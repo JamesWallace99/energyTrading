@@ -29,23 +29,21 @@ class energyGenerator():
     Assume that value is average power gen in MW within interval
 
     """
-    def __init__(self, name, max_power, time_step = None, sim_length = None, location= None, gen_forecast = None):
+    def __init__(self, name, max_power, location= None, gen_forecast = None):
         self.name : str = name
         self.max_power : float = max_power
         self.location : list[float] = location # list of long-lat need to define data format
-        self.time_step: float = time_step # time step for the simualtion in hrs
-        self.sim_length: float = sim_length # total length of sim in hrs
         self.gen_forecast: list[float] = gen_forecast
         
         
     def __str__(self):
         return f"Site Name: {self.name}, Power Output: {self.max_power}"
     
-    def calculate_generation(self):
+    def calculate_generation(self, sim_length, time_step):
         """
         Calculates a random generation profile for the generation asset based on the sim time step
         """
-        test = np.empty([int(np.ceil(self.sim_length / self.time_step))]) # initiate empty array
+        test = np.empty([int(np.ceil(sim_length / time_step))]) # initiate empty array
         for i in range(len(test)):
             test[i] = round(random.uniform(0, self.max_power), 2)
         
@@ -80,23 +78,21 @@ class energyLoad():
     Assume that value is average demand gen in MW within interval
 
     """
-    def __init__(self, name, maxLoad, time_step = None, sim_length = None, load_forecast = None, location = None):
+    def __init__(self, name, maxLoad, load_forecast = None, location = None):
         self.name : str = name # name of load asset
         self.maxLoad : float = maxLoad # max load in MW
         self.location : list[float] = location # list of long-lat need to define data format
-        self.time_step : float = time_step # sim time step in hrs
-        self.sim_length : float = sim_length # total length of sim in hrs
         self.load_forecast : list[float] = load_forecast # array containing load forecast for asset in MW
         
     def __str__(self):
         return f"Name: {self.name}, Max Load: {self.maxLoad} MW, Load Time Limit: {self.loadTimeLimit} hrs, Current Load: {self.current_load()} MW, Current Load Time: {self.current_load_time()} hrs"
     
     
-    def calculate_load(self):
+    def calculate_load(self, sim_length, time_step):
         """
         Calculates a random load profile for the load asset based on the sim time step in MW
         """
-        test = np.empty([int(np.ceil(self.sim_length / self.time_step))]) # initiate empty array
+        test = np.empty([int(np.ceil(sim_length / time_step))]) # initiate empty array
         for i in range(len(test)):
             test[i] = round(random.uniform(0, self.maxLoad), 2)
 
