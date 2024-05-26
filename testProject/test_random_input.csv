@@ -1,6 +1,10 @@
 name,location,type,gen_power_lim,storage_power_lim,storage_max_cap,storage_current_cap,load_power_lim
 rand_load_bedford,Bedford,load,,,,,100
+rand_load_oxford,Oxford,load,,,,,100
 rand_stor_bedford,Bedford,storage,,100,200,200,
 rand_gen_bedford,Bedford,generator,100,,,,
 rand_gen_oxford,Oxford,generator,100,,,,
 rand_stor_oxford,Oxford,storage,,100,100,0,
+rand_stor_london,London,storage,,100,100,0,
+rand_stor_camb,Camb,storage,,100,100,0,
+rand_stor_islip,Islip,storage,,100,100,0,
