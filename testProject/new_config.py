@@ -115,8 +115,6 @@ class energyStorage():
         Name of the storage asset
     maxOutput : float
         Max power output (MW)
-    state : str
-        state of asset - 'Charging', 'Discharging' or 'Static'
     maxCapacity : float
         defines the max energy of the asset MWh
     currentCapacity: float
@@ -127,7 +125,7 @@ class energyStorage():
     Methods
     -------
     report_capability() -> float:
-        Returns asset's abiltiy to conduct trade and state of asset after trade.
+        Returns asset's abiltiy to conduct trade and capacity of asset after trade.
         Input: grid power requirement
                Positive when power needs to be added to the grid
                Negative when power needs to be removed from the grid

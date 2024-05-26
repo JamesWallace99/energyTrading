@@ -1,5 +1,5 @@
-name,type,num_assets,power_range_lower,power_range_upper,output_range_lower,output_range_upper,max_capacity_range_lower,max_capacity_range_upper,current_range_lower,current_range_upper,max_load_range_lower,max_load_range_upper,load_time_limit_range_lower,load_time_limit_range_upper
-,load,11,,,,,,,,,10,100,0.1,1
-,storage,8,,,50,100,100,200,0,200,,,,
-rand_gen_bedford,generator,5,50,100,,,,,,,,,,
-,generator,4,50,100,,,,,,,,,,
+name,location,type,gen_power_lim,storage_power_lim,storage_max_cap,storage_current_cap,load_power_lim
+rand_load_bedford,Bedford,load,,,,,100
+rand_stor_bedford,Bedford,storage,,100,200,200,
+rand_gen_bedford,Bedford,generator,100,,,,
+rand_gen_oxford,Oxford,generator,100,,,,
