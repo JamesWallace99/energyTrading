@@ -100,43 +100,46 @@ class esoBot():
         
         self.initiate_grid_csv(asset_csv_pathname)
         self.get_imbalance_forecast(sim_length=sim_length, time_step=time_step)
-        self.plot_imbalance(sim_length= sim_length, time_step=time_step)
         
-        print("Imbalanc Profile = ", self.imbalance_profile)
+        print("Imbalance Profile = ", self.imbalance_profile)
         
         for i in range(len(self.imbalance_profile)): # minimise imbalance at each timestep
             
             # move storage loop to outside and then consider if charge discharge is needed
             print("\n")
             print("Imbalance = ", self.imbalance_profile[i])
-            for j in self.storage_assets:
-                print("Storage asset being considered: ", j)
-                # grid requires excess power to be absorbed
-                if self.imbalance_profile[i] > 0:
-                    # when power needs to be absorbed then imbalance value is positive
-                    # need to provide storage with a negative value as this indicates that grid needs asset to absorb
-                    # use check capability method on storage and then update imbalance
-                    temp = j.report_capabiltiy(grid_power_req = -1*self.imbalance_profile[i], time_step = time_step)
-                    print(temp)
-                    if temp[0]: # if storage asset can help then execute
-                        j.execute_trade(grid_power_req = -1*self.imbalance_profile[i], time_step = time_step)
-                        self.imbalance_profile[i] += temp[1]
-                    print("Storage asset updated capacity: ", j.currentCapacity)
-                
-                # grid requires power to be provided
-                if self.imbalance_profile[i] < 0:
-                    # when power needs to be absorbed then imbalance value is negative
-                    # need to provide storage with a positive value as this indicates that grid needs asset to absorb
-                    # use check capability method on storage and then update imbalance
-                    temp = j.report_capabiltiy(grid_power_req = -1*self.imbalance_profile[i], time_step = time_step)
-                    print(temp)
-                    if temp[0]: # if storage asset can help then execute
-                        j.execute_trade(grid_power_req = -1*self.imbalance_profile[i], time_step = time_step)
-                        self.imbalance_profile[i] += temp[1]
-                    print("Storage asset updated capacity: ", j.currentCapacity)
+            print("Rounded value", round(self.imbalance_profile[i], 2))
+            if round(self.imbalance_profile[i], 2) != 0.0:
+                for j in self.storage_assets:
+                    print("Storage asset being considered: ", j)
+                    print("Imbalance being resolved: ", self.imbalance_profile[i])
+                    # grid requires excess power to be absorbed
+                    if self.imbalance_profile[i] > 0:
+                        # when power needs to be absorbed then imbalance value is positive
+                        # need to provide storage with a negative value as this indicates that grid needs asset to absorb
+                        # use check capability method on storage and then update imbalance
+                        temp = j.report_capabiltiy(grid_power_req = -1*self.imbalance_profile[i], time_step = time_step)
+                        print(temp)
+                        if temp[0]: # if storage asset can help then execute
+                            j.execute_trade(grid_power_req = -1*self.imbalance_profile[i], time_step = time_step)
+                            self.imbalance_profile[i] += temp[1]
+                        print("Storage asset updated capacity: ", j.currentCapacity)
+                    
+                    # grid requires power to be provided
+                    if self.imbalance_profile[i] < 0:
+                        # when power needs to be absorbed then imbalance value is negative
+                        # need to provide storage with a positive value as this indicates that grid needs asset to absorb
+                        # use check capability method on storage and then update imbalance
+                        temp = j.report_capabiltiy(grid_power_req = -1*self.imbalance_profile[i], time_step = time_step)
+                        print(temp)
+                        if temp[0]: # if storage asset can help then execute
+                            j.execute_trade(grid_power_req = -1*self.imbalance_profile[i], time_step = time_step)
+                            self.imbalance_profile[i] += temp[1]
+                        print("Storage asset updated capacity: ", j.currentCapacity)
+                    
+                    if round(self.imbalance_profile[i], 2) == 0.00:
+                        break
         
-        
-        self.plot_imbalance(sim_length= sim_length, time_step=time_step)
         print(self.imbalance_profile)
         
         for i in self.storage_assets:
