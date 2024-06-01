@@ -1,6 +1,7 @@
 import ESObot
 import config
 import numpy as np
+import matplotlib.pyplot as plt
 
 x = ESObot.esoBot()
 
@@ -20,7 +21,7 @@ test_sim_length = 240
 # x.plot_imbalance(sim_length=test_sim_length, time_step= test_time_step)
 
 
-sim_runs = 10
+sim_runs = 100
 average_resulting_imbalance = np.empty([int(np.ceil(test_sim_length / test_time_step))]) 
 
 for i in range(sim_runs):
@@ -30,4 +31,7 @@ for i in range(sim_runs):
     
 average_resulting_imbalance = average_resulting_imbalance / 100 
 
-print(average_resulting_imbalance)
+print("Average imbalance from all sims: ", average_resulting_imbalance)
+
+plt.plot(average_resulting_imbalance)
+plt.show()

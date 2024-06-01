@@ -107,8 +107,7 @@ class esoBot():
             
             # move storage loop to outside and then consider if charge discharge is needed
             print("\n")
-            print("Imbalance = ", self.imbalance_profile[i])
-            print("Rounded value", round(self.imbalance_profile[i], 2))
+            print("Imbalance at current timestep = ", self.imbalance_profile[i])
             if round(self.imbalance_profile[i], 2) != 0.0:
                 for j in self.storage_assets:
                     print("Storage asset being considered: ", j)
@@ -140,10 +139,10 @@ class esoBot():
                     if round(self.imbalance_profile[i], 2) == 0.00:
                         break
         
-        print(self.imbalance_profile)
+        print("\n")
+        print("Balanced Imbalance Profile: ", self.imbalance_profile)
+        print("\n")
         
-        for i in self.storage_assets:
-            print(i.currentCapacity)
         
         return()
         

@@ -132,7 +132,7 @@ class energyStorage():
         self.name : str = name # asset name
         self.maxOutput : float = maxOutput # Max Power output MW
         self.maxCapacity : float = maxCapacity # MWh
-        self.currentCapacity : float = currentCapacity if currentCapacity is not None else 0 # MWh
+        self.currentCapacity : float = currentCapacity # MWh
         
     def __str__(self):
         return f"Name: {self.name}, Max Output: {self.maxOutput} MW, Max Capacity: {self.maxCapacity} MWh, Current Capacity: {self.currentCapacity}"
@@ -188,9 +188,10 @@ class energyStorage():
                 temp_power_limit = energy_available / time_step
             else:
                 temp_power_limit = self.maxOutput
+                
+        
         if grid_power_req < 0: # asset charging as grid requires power to be absorbed
             energy_to_fill = self.maxCapacity - energy_available
-            print("energy available to fill: ", energy_to_fill)
             if self.maxOutput * time_step > energy_to_fill:
                 # can't sustain max power for the time period so need to bid in with new power limit
                 temp_power_limit = -1* energy_to_fill / time_step
@@ -202,7 +203,7 @@ class energyStorage():
         
         # edge case
         # if the grid needs less power than the asset can provide, we need to supply less power
-        if abs(grid_power_req) < abs(temp_power_limit):
+        if abs(grid_power_req) <= abs(temp_power_limit):
             # we reduce power output of asset to match exact grid requirement
             if grid_power_req > 0: # if asset needs to discharge
                 energy_available -= grid_power_req*time_step
@@ -221,6 +222,8 @@ class energyStorage():
             if grid_power_req < 0: # asset needs to charge from grid
                 energy_available += -1* temp_power_limit*time_step
                 return([True, temp_power_limit, energy_available])
+            
+        # case where grid power requirement exactly matches 
 
     def execute_trade(self, grid_power_req, time_step):
         '''
