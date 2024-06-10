@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 
 # this file reads in the solar voltaics reporting spreadsheets from the national deartment of stats
 # these locations are converted into lat and long
-# it also approximates the equivalent size of the solar panels
+# it also approximates the equivalent size of the solar panels by comparing their rated power output and calculated max irradiance values
+# it saves to a new csv with country,constituency,installed_cap_mwh,eqv_panel_area_m2,lat,long
 
 filepath = "/Users/jameswallace/Documents/energyTrading/testProject/Table_3_Feb_24-Table 1.csv"
 
